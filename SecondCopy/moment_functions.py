@@ -292,7 +292,7 @@ def Flus_Basis(C,dMax):
 #    return F
     
 def Flus_Moment(C,dMax):
-    m=C[2,1]
+    m=C[1,2]
     num_cmoms=1
     for d in range(1,dMax+1):
         for q in range(int(np.floor(d/2)+1)):
