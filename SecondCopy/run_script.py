@@ -21,14 +21,18 @@ Xtest,testLbls=ld.load_images('test',num_test)
 #plt.imshow(Y,cmap='gray',vmin=0,vmax=255,interpolation='none')
 
 #construct moment objects which store the feature vectors
-trainMom=mf.MomentObj(Xtrain[:5,:],deg)
+trainMom=mf.MomentObj(Xtrain,deg)
+testMom=mf.MomentObj(Xtest,deg)
 
-
-fileNm="pickled.data"
+fileNm="trainMoms.data"
 fileObj=open(fileNm,'wb') 
 pickle.dump(trainMom,fileObj)
 fileObj.close() 
 
+fileNm="testMoms.data"
+fileObj=open(fileNm,'wb') 
+pickle.dump(testMom,fileObj)
+fileObj.close() 
 # fileObj=open("pickled.data",'rb')
 # b=pickle.load(fileObj)
 # fileObj.close()
