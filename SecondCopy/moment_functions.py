@@ -6,7 +6,7 @@ Created on Mon Mar 16 13:51:36 2020
 """
 import numpy as np
 from scipy.special import binom
-import view_images_script as ld
+
 
 
 def VecIdx(string,dMax):
