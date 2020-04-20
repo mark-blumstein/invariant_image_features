@@ -8,12 +8,13 @@ import gzip
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import pickle
 
 def load_images(opt,k):
     if (opt in ['train','test']) == False:
         return print("enter train or test")
     
-    pth='C:/Users/markb/Documents/Postdoc/Experiments/MNIST_Data/'
+    pth='../MNIST_Data/'
     
     dct={'train': ['train-labels-idx1-ubyte.gz','train-images-idx3-ubyte.gz'],
         'test':['t10k-labels-idx1-ubyte.gz','t10k-images-idx3-ubyte.gz'] }
@@ -57,14 +58,36 @@ def load_images(opt,k):
     
     X=X.reshape(num_images,num_pxls)
     
-    labels=np.zeros([num_images,num_pxls])
-
+    # labels=np.zeros([num_images,num_pxls])
     
+    labels=np.zeros(num_images)
+    ctr=0
     for l in range(10):
         for c in range(k):
-            labels[c:c+k]=l
+            labels[ctr]=l
+            ctr+=1
+    
+    # for l in range(10):
+    #     for c in range(k):
+    #         labels[c:c+k]=l
             
     return X,labels
+
+
+
+
+def loadMomentData():
+    fileNm="trainMoms.data"
+    fileObj=open(fileNm,'rb') 
+    x=pickle.load(fileObj)
+    fileObj.close() 
+    
+    fileNm="testMoms.data"
+    fileObj=open(fileNm,'rb') 
+    y=pickle.load(fileObj)
+    fileObj.close() 
+    
+    return x,y
 
 #Plot some images
 #for j in range(90,100):
