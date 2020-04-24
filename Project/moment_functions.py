@@ -74,10 +74,23 @@ def geoMoments(X,dMax,numPts=100):
     
     geoMmts=dA*geoMoments
     return geoMoments
-        
-def cmpMoments(X,dMax,numPts=100):
+
+
+def computeAll(Data,dMax,numPts=100):
+    print("*"*15,"Computing Moments","*"*15)
+    numImgs=Data.shape[0]
+    Box=np.ones((numPts,numPts))
+    numGeo,numCmp=numMoms(dMax)
+    cmpMoms=np.zeros((numImgs,numCmp),dtype=np.complex)
+    for n in range(numImgs):
+        X=Data[n].reshape(28,28)
+        cmpMoms[n]=cmpMoments(X,dMax,Box,numPts)
+        print("\t","Finished Complex Moments of image number ",n)
+    return cmpMoms
+
+def cmpMoments(X,dMax,Box,numPts=100):
     #X is image in square grid of size numPts by numPts
-    Box=np.ones((numPts,numPts)) #compute this outside the function
+    #Box=np.ones((numPts,numPts)) #compute this outside the function
     ImgMesh=np.kron(X,Box)
     sz=ImgMesh.shape[0]
     cent=(1/sz)*np.array(center_of_mass(ImgMesh)) 
@@ -109,7 +122,7 @@ def cmpMoments(X,dMax,numPts=100):
         
     #Main loop
     for q in range(1,qMax+1):
-        CurrArr=np.copy(NextArr)
+        CurrArr[:]=NextArr
         NextArr=CurrArr*UpArr
         for p in range(q,dMax-q+1):
             cmpMoments[ctr]=(CurrArr*ImgMesh).sum()
@@ -118,7 +131,7 @@ def cmpMoments(X,dMax,numPts=100):
     
     #scale by area form for Riemann sum
     dA=1/((sz-1)**2)
-    cmpMoments=dA*cmpMoments
+    cmpMoments*=dA
     return cmpMoments
 
     
@@ -139,10 +152,20 @@ def idxCmp3(dMax):
             ctr+=1
     return idx
 
-def viewMoment(X,p,q):
-    pass
+def viewMoment(X,p,q,Box,numPts=100):
+    ImgMesh=np.kron(X,Box)
+    sz=ImgMesh.shape[0]
+    cent=(1/sz)*np.array(center_of_mass(ImgMesh))
+    coordX=np.linspace(-1*cent[0],-1*cent[0]+1,sz).reshape(sz,1)
+    coordY=np.linspace(-1*cent[1],-1*cent[1]+1,sz).reshape(1,sz)    
     
-        
+    RtArr=coordX+(1j)*coordY
+    UpArr=np.conj(RtArr)
+    
+    Arr=((RtArr)**p)*((UpArr)**q)
+    plt.imshow(Arr.real)
+    plt.figure()
+    plt.imshow(Arr.imag)
         
     
             
