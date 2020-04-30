@@ -10,9 +10,16 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
 
+#rewrite this so that num imgs, num_test,deg are passed
+#from run_script.py instead of hard coding it
+num_train=500 #of each digit
+num_test=100
+deg=10
+
 def load_images(opt,k):
     if (opt in ['train','test']) == False:
-        return print("enter train or test")
+        print("enter train or test") 
+        return
     
     pth='../MNIST_Data/'
     
@@ -77,12 +84,12 @@ def load_images(opt,k):
 
 
 def loadMomentData():
-    fileNm="trainMoms.data"
+    fileNm="train_mts.data"
     fileObj=open(fileNm,'rb') 
     x=pickle.load(fileObj)
     fileObj.close() 
     
-    fileNm="testMoms.data"
+    fileNm="test_mts.data"
     fileObj=open(fileNm,'rb') 
     y=pickle.load(fileObj)
     fileObj.close() 

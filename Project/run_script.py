@@ -6,11 +6,12 @@ Created on Wed Apr  8 11:14:24 2020
 """
 import view_images_script as ld
 import moment_functions as mf
+import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 
-num_train=10 #of each digit
-num_test=50
+num_train=500 #of each digit
+num_test=100
 deg=10 #total degree of moments to be computed
 
 #Load the image data and labels
@@ -21,20 +22,26 @@ Xtest,testLbls=ld.load_images('test',num_test)
 #plt.imshow(Y,cmap='gray',vmin=0,vmax=255,interpolation='none')
 
 #construct moment objects which store the feature vectors
-trCmp=mf.computeAll(Xtrain,deg)
+tr_mts=mf.Moments()
+tr_mts.fit(Xtrain)
+tr_mts.compute(deg)
 
-fileNm="trainMoms_vectorized.data"
+te_mts=mf.Moments()
+te_mts.fit(Xtest)
+te_mts.compute(deg)
+        
+
+fileNm="train_mts.data"
 fileObj=open(fileNm,'wb') 
-pickle.dump(trCmp,fileObj)
+pickle.dump(tr_mts,fileObj)
 fileObj.close() 
 
-#fileNm="testMoms.data"
-#fileObj=open(fileNm,'wb') 
-#pickle.dump(testMom,fileObj)
-#fileObj.close() 
-# fileObj=open("pickled.data",'rb')
-# b=pickle.load(fileObj)
-# fileObj.close()
+fileNm="test_mts.data"
+fileObj=open(fileNm,'wb') 
+pickle.dump(te_mts,fileObj)
+fileObj.close() 
+
+
 
 
 #testMom=mf.MomentObj(Xtest,deg)
