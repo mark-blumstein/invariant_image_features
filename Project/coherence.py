@@ -9,8 +9,10 @@ import numpy as np
 import view_images_script as ld
 #from moment_functions import cmp_moment
 import moment_functions as mf
-from moment_functions import rotate
+#from moment_functions import rotate
 import matplotlib.pyplot as plt 
+from scipy.ndimage import rotate
+
 
 def coherence(A,B):
     numImgs=A.shape[0]
@@ -55,39 +57,27 @@ tst.clcmp=tst.cmp.reshape((10,num_test,tst.cmp.shape[1]))
 
 #Test the coherence classifier
 X=tr.data[0].reshape(28,28)
-Y=rotate(X,np.pi/6)
+Y=rotate(X,30)
+plt.figure()
+plt.imshow(X)
+plt.figure()
+plt.imshow(Y)
 
 xmts=tr.cmp[0][2:(deg+1)]
 
 ymts=[]
 for k in range(2,deg+1):
-    mt=compute_cmp(Y,k+1,0)
-    print(k,mt)
+    mt=mf.compute_cmp(Y,k,0)
     ymts.append(mt)
-
 ymts=np.array(ymts)  
+
+
 ymts=ymts[np.newaxis,:]
 xmts=xmts[np.newaxis,:]
 
 sc,pr=coherence(xmts,ymts)
 
 
-# rotation_matrix=cv2.getRotationMatrix2D((cent[0], cent[1]))
-# rotated_image=cv2.warpAffine(image,rotation_matrix,(width,height))
-
-
-# Z=Xtrain[201].reshape(28,28)
-# Z2=rotate(Z,np.pi/6)
-# z2mts=[]
-# for k in range(9):
-#     mt,a=cmp_moment(Z2,k+1,0)
-#     z2mts.append(mt)
-
-# z2mts=np.array(z2mts)
-# z2mts=z2mts[np.newaxis,:]
-# zmts=ctr[1,0,:9]
-# zmts=zmts[np.newaxis,:]
-# coherence(zmts,z2mts)
 
 
 
@@ -103,6 +93,16 @@ sc,pr=coherence(xmts,ymts)
 #as a key point for coherence classification
 keys=tr.clcmp[:,0,:(deg+1)]
 scores,preds=coherence(tst.cmp[:,:(deg+1)],keys)
+
+#confusion matrix
+c=np.zeros((10,10))
+for k in range(10):
+    tot=0
+    for j in range(10):
+        s=(preds[(100*k):(100*k+100)]==j).sum()
+        c[k,j]=s
+        tot+=s
+    c[k]=1/tot*c[k]
 
 
    

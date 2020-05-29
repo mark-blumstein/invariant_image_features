@@ -9,6 +9,11 @@ import numpy as np
 from scipy.ndimage.measurements import center_of_mass
 from scipy.special import binom
 
+#one class for geo_all_exact and geo_all
+#will have a get function to index by p,q
+#will take in a range of 
+class geo(object):
+    pass
 
 
 def geo_all_exact(img,d_max):
@@ -51,27 +56,7 @@ def geo_all_exact(img,d_max):
         
     return geo
         
-def tensor_view(geo,d_max):
-    idx={}
-    ctr=0
-    for q in range(d_max+1):
-        for p in range(d_max+1-q):
-            idx[(p,q)]=ctr
-            #idx[ctr]=(p,q)
-            ctr+=1
-    
-    view=[]
-    for d in range(d_max+1):
-        crds=np.zeros(d+1,dtype=int)
-        for q in range(d+1):
-            p=d-q
-            crds[q]=idx[p,q]
-        view.append(geo[crds])
-        #both evaluate to false, so not actually a view...fix!
-        #print(view[q].base is geo)
-        #print(geo[crds].base is geo)
-    
-    return view
+
 
 def compute_geo(img,p,q):
     cent=np.array(center_of_mass(img))
@@ -134,11 +119,12 @@ def compute_all(img,d_max,idx):
     
     return geo,cmp
 
-
+class mt(object):
+    pass
+        
+        
 class Moments(object):
-    def __init__(self):
-        pass
-    def fit(self,X):
+    def __init__(self,X):
         self.data=X
         self.img_sz=28
         self.num_imgs=X.shape[0]
@@ -151,6 +137,7 @@ class Moments(object):
         for q in range(d_max+1):
             for p in range(d_max+1-q):
                 idx[(p,q)]=ctr
+                idx[ctr]=(p,q)
                 ctr+=1
         self.idx=idx
         
@@ -167,10 +154,50 @@ class Moments(object):
             
         self.geo=geo_all
         self.cmp=cmp_all
+        
         return
         
+
+def flus(cmp,idx,crd=(2,1)):
+    key=cmp[idx[crd]]
+    
+    
+
+#Make a class to handle triangular (as opposed to rectangular) arrays
+class Tri_Array(object):
+    def __init__(self,arr,idx):
+        self.arr=arr
+        self.idx=idx
+        
+    def get(self,p,q):
+        return self.arr[self.idx[p,q]]
+    
+    def gen(deg):
+        return gen_diag(deg)
+    
+    def gen_all(d_max):
+        return gen_diag_all(d_max)
+    
+####### 
+#Generators to iterate over a diagonal in moments plane (p,q) p+q=d
+def gen_diag(deg):
+    for q in range(deg+1):
+        p=deg-q
+        yield (p,q)
+
+def gen_diag_all(d_max):
+    for d in range(d_max+1):
+        for q in range(d+1):
+            p=d-q
+            yield (p,q)
             
-#######    
+
+
+
+
+
+           
+##########################    
     
 def geo_all(X,dMax,numPts=100):
     #X is image in square grid of size numPts by numPts
@@ -231,7 +258,27 @@ def geo_all(X,dMax,numPts=100):
     return geoMoments
 
 
-
+def tensor_view(geo,d_max):
+    idx={}
+    ctr=0
+    for q in range(d_max+1):
+        for p in range(d_max+1-q):
+            idx[(p,q)]=ctr
+            #idx[ctr]=(p,q)
+            ctr+=1
+    
+    view=[]
+    for d in range(d_max+1):
+        crds=np.zeros(d+1,dtype=int)
+        for q in range(d+1):
+            p=d-q
+            crds[q]=idx[p,q]
+        view.append(geo[crds])
+        #both evaluate to false, so not actually a view...fix!
+        #print(view[q].base is geo)
+        #print(geo[crds].base is geo)
+    
+    return view
 
 
 ##########################################################

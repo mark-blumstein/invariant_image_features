@@ -10,8 +10,46 @@ import numpy as np
 #from scipy import integrate
 import view_images_script as ld
 import itertools
+import matplotlib.pyplot as plt
+from scipy.ndimage import geometric_transform, affine_transform, rotate
+a = np.arange(12.).reshape((4, 3))
+def shift_func(output_coords):
+    return (output_coords[0] - 0.5, output_coords[1] - 0.5)
+
 Y,lbl=ld.load_images('train',2)
 Z=Y[0].reshape(28,28)
+
+theta=30
+g=rotate(Z,theta)
+plt.figure()
+plt.imshow(g)
+plt.show()
+
+
+theta=0
+c=np.cos(theta)
+s=np.sin(theta)
+R=np.array([[c,-s],[s,c]])
+
+g=affine_transform(Z,R)
+plt.figure()
+plt.imshow(g)
+plt.show()
+
+
+theta=0
+def rotate_func(output_coords):
+    x=output_coords[0]
+    y=output_coords[1]
+    c=np.cos(theta)
+    s=np.sin(theta)
+    return (c*x+-1*s*y,c*x+s*y)
+g=geometric_transform(Z, rotate_func)
+plt.figure()
+plt.imshow(g)
+plt.show()
+
+
 W=Y[1].reshape(28,28)
 a=np.zeros(4)
 b=np.ones(4)
@@ -25,11 +63,5 @@ lst2=list(map(lambda x: x+'z',lst))
 x=np.arange(10)
 y=list(map(lambda x:x+2,x))
 
-x=np.zeros((100,100))
-y=np.ones(100)
 
-def func(a,n):
-    a=n*
-for n in range(100):
-    x[n]=n*y
     
