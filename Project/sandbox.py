@@ -63,5 +63,14 @@ lst2=list(map(lambda x: x+'z',lst))
 x=np.arange(10)
 y=list(map(lambda x:x+2,x))
 
-
+class foo(np.ndarray):
+    def __new__(cls,input_array):
+        return np.asarray(input_array).view(cls)
+    
+    def __array_finalize__(self,obj):
+        if obj is None: return
+        self.
+        
+        
+    
     

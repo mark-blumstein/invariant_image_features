@@ -12,7 +12,7 @@ import pickle
 
 num_train=500 #of each digit
 num_test=100
-deg=10 #total degree of moments to be computed
+deg=8 #total degree of moments to be computed
 
 #Load the image data and labels
 Xtrain,trainLbls=ld.load_images('train',num_train)
@@ -22,21 +22,22 @@ Xtest,testLbls=ld.load_images('test',num_test)
 #plt.imshow(Y,cmap='gray',vmin=0,vmax=255,interpolation='none')
 
 #construct moment objects which store the feature vectors
-tr_mts=mf.Moments()
-tr_mts.fit(Xtrain)
+tr_mts=mf.Moments(Xtrain)
+#tr_mts=mf.Moments()
+#tr_mts.fit(Xtrain)
 tr_mts.compute(deg)
 
-te_mts=mf.Moments()
-te_mts.fit(Xtest)
+te_mts=mf.Moments(Xtest)
+#te_mts.fit(Xtest)
 te_mts.compute(deg)
         
 
-fileNm="train_mts.data"
+fileNm="train_mts_july2020.data"
 fileObj=open(fileNm,'wb') 
 pickle.dump(tr_mts,fileObj)
 fileObj.close() 
 
-fileNm="test_mts.data"
+fileNm="test_mts_july2020.data"
 fileObj=open(fileNm,'wb') 
 pickle.dump(te_mts,fileObj)
 fileObj.close() 

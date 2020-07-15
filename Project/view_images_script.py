@@ -14,7 +14,7 @@ import pickle
 #from run_script.py instead of hard coding it
 num_train=500 #of each digit
 num_test=100
-deg=10
+deg=8
 
 def load_images(opt,k):
     if (opt in ['train','test']) == False:
@@ -84,12 +84,12 @@ def load_images(opt,k):
 
 
 def loadMomentData():
-    fileNm="train_mts.data"
+    fileNm="train_mts_july2020.data"
     fileObj=open(fileNm,'rb') 
     x=pickle.load(fileObj)
     fileObj.close() 
     
-    fileNm="test_mts.data"
+    fileNm="test_mts_july2020.data"
     fileObj=open(fileNm,'rb') 
     y=pickle.load(fileObj)
     fileObj.close() 

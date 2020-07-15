@@ -100,8 +100,10 @@ def binom_naive(geo,idx,p,q):
     for a in range(p+1):
         for b in range(q+1):
             n=a+b
-            crd=idx[n,deg-n]
-            mlt=(1j)**(deg-n)*((-1)**(q-b))*binom(p,a)*binom(q,b)
+            #crd=idx[n,deg-n]
+            crd=idx[deg-n,n]
+            mlt=(1j)**(a+3*b)*binom(p,a)*binom(q,b)
+            #mlt=(1j)**(deg-n)*((-1)**(q-b))*binom(p,a)*binom(q,b)
             tot+=mlt*geo[crd]
     return tot
         
@@ -119,9 +121,14 @@ def compute_all(img,d_max,idx):
     
     return geo,cmp
 
-class mt(object):
-    pass
-        
+
+def flus(cmp,idx,crd=(2,1)):
+    key=cmp[idx[crd]]
+    flus_arr=np.zeros(cmp.shape[0],dtype=np.complex)
+    for ctr in range(cmp.shape[0]):
+        p,q=idx[ctr]
+        flus_arr[ctr]=key**(q-p)*cmp[ctr]
+    return flus_arr      
         
 class Moments(object):
     def __init__(self,X):
@@ -145,21 +152,22 @@ class Moments(object):
         print("-"*20,"Computing Moments","-"*20)
         geo_all=np.zeros([num_imgs,num_mts])
         cmp_all=np.zeros([num_imgs,num_mts],dtype=np.complex)
+        flus_all=np.zeros([num_imgs,num_mts],dtype=np.complex)
         ctr=0
         for n in range(num_imgs):
             cur_img=self.data[n].reshape(self.img_sz,self.img_sz)
             geo_all[ctr],cmp_all[ctr]=compute_all(cur_img,d_max,idx)
+            flus_all[ctr]=flus(cmp_all[ctr],self.idx)
             ctr+=1
-            print("Finished Moment ",n)
+            #print("Finished Moment ",n)
             
         self.geo=geo_all
         self.cmp=cmp_all
-        
+        self.flus=flus_all
         return
         
 
-def flus(cmp,idx,crd=(2,1)):
-    key=cmp[idx[crd]]
+
     
     
 

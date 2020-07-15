@@ -94,6 +94,7 @@ sc,pr=coherence(xmts,ymts)
 keys=tr.clcmp[:,0,:(deg+1)]
 scores,preds=coherence(tst.cmp[:,:(deg+1)],keys)
 
+#
 #confusion matrix
 c=np.zeros((10,10))
 for k in range(10):

@@ -56,4 +56,3 @@ for q in range(deg+1):
         
 #get indices in "diagonal" order
 didx=[idx.get(x) for x in mf.gen_diag_all(deg)]
-mts[]
